@@ -48,7 +48,7 @@
         <div class="col-md-6 d-flex">
             <input type="input" id="searchKeyword" class="form-control" placeholder="찾으시는 행사의 키워드로 검색해 보세요" style="border: 1px solid #000000; background-color: #ffffff;">
             <button type="button" onclick="searchWithKeyword()" class="btn btn-primary ml-2" style="border: 1px solid #000000; background-color: #ffffff; color: #000000;">검색</button><br>
-        </div>
+          </div>
     </div><br>
     <div class="row justify-content-center mt-3">
         <span class="keyword" onclick="addKeyword('뮤지컬')" style="margin-right: 40px;">뮤지컬</span>
@@ -101,7 +101,7 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
+  <script src="search.js"></script>
   <script>
     // Start carousel
     $('.carousel').carousel({
@@ -112,12 +112,13 @@
       document.getElementById('searchKeyword').value = keyword;
     }
 
+  
     function searchWithKeyword() {
       var keyword = document.getElementById('searchKeyword').value;
-      // Perform search with the keyword (you can modify this based on your requirements)
-      alert('Performing search with keyword: ' + keyword);
+      // Redirect 하는부분
+      window.location.href = 'search.html?keyword=' + keyword;
     }
-
   </script>
+  
 </body>
 </html>

@@ -1,11 +1,17 @@
 
 const express = require('express');
 const path = require('path');
-const { performSearch } = require('./search');
+import { performSearch } from './search';
 
 const app = express();
 const PORT = 8800;
 
+app.use('/js', express.static(path.join(__dirname, 'public'), { 
+  extensions: ['js'], 
+  setHeaders: (res, filePath) => {
+    res.set('Content-Type', 'application/javascript');
+  },
+}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,10 +36,17 @@ app.get('/search', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'search.html'));
 });
 
-app.get('/api/search', (req, res) => {
+app.get('/api/search', async (req, res) => {
   const { query } = req.query;
-  const results = performSearch(query);
-  res.json({ results });
+
+  try {
+    // Perform the search using the function from search.js
+    const results = await performSearch(query);
+    res.json({ results });
+  } catch (error) {
+    console.error('Error searching:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 
