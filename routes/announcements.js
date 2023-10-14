@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Announcement = require('../models/Announcement');
+const data = require('../db'); // Import the data from db.js
 
-router.get('/announcements', async (req, res) => {
+router.get('/announcements', (req, res) => {
   try {
-    const announcements = await Announcement.find({}, 'TITLE_NM CLASS_NM BGNG_DE END_DE TM  IMAGE_URL_NM HMPG_NM');
-    res.json({ announcements });
+    res.json({ announcements: data });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('Server Error');
