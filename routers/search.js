@@ -38,17 +38,17 @@ router.post('/result', async(req, res) => {
       console.log('일치하는 항목이 없습니다.')
     } else {
       console.log('일치하는 항목이 존재합니다.')
-      res.render('searchList.ejs', {검색결과 : result});
+      res.render('search.html', {검색결과 : result});
     }
   } else { // 선택한게 없으면, 모두 띄우기
     let result = await db.collection('program').find({}).toArray();
 
-    res.render('searchList.ejs', {검색결과 : result});
+    res.render('search.html', {검색결과 : result});
   }
 });
 
 router.get('/detail', (req, resp) => {
-  const filePath = path.join(__dirname, '../public/searchList.html');
+  const filePath = path.join(__dirname, '../public/search.html');
     res.sendFile(filePath);
 })
 
