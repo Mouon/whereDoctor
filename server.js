@@ -48,7 +48,7 @@ app.get('/search', (req, resp) => {
 //문화 소식
 app.use('/news', require('./routers/news.js'))
 app.get('/news', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'services.html'));
+  res.sendFile(path.join(__dirname, 'public', 'news.html'));
 });
 
 //개발자들
