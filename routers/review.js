@@ -1,46 +1,45 @@
-// review.js
-
 const express = require('express');
-const router = express.Router();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-let reviews = []; // 간단한 메모리 기반 데이터베이스 역할을 하는 배열
+const app = express();
+const port = 3000;
 
-// 후기 목록 조회
-router.get('/', (req, res) => {
-  res.json(reviews);
+// MongoDB 연결
+mongoose.connect('mongodb://localhost:27017/reviewsdb', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB 연결 오류:'));
+db.once('open', function() {
+    console.log('MongoDB 연결 성공');
 });
 
-
-// 후기 작성
-router.post('/', (req, res) => {
-  const { reviewText, password } = req.body;
-  const review = {
-    id: generateReviewId(),
-    reviewText,
-    password,
-  };
-  reviews.push(review);
-  res.json({ success: true, review });
+// 리뷰 모델 정의
+const Review = mongoose.model('Review', {
+    reviewText: String,
+    password: String,
 });
 
-// 후기 삭제
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  const { password } = req.body;
+// 정적 파일 제공 (index.html)
+app.use(express.static('public'));
 
-  const index = reviews.findIndex(review => review.id === id);
+// JSON 파싱 미들웨어 설정
+app.use(bodyParser.json());
 
-  if (index !== -1 && reviews[index].password === password) {
-    reviews.splice(index, 1);
-    res.json({ success: true });
-  } else {
-    res.status(400).json({ success: false, message: 'Invalid reviewId or password' });
-  }
+// 후기 저장 API
+app.post('/api/reviews', (req, res) => {
+    const { reviewText, password } = req.body;
+
+    const review = new Review({ reviewText, password });
+    review.save()
+        .then(() => {
+            res.json({ message: '후기 저장 완료' });
+        })
+        .catch(err => {
+            res.status(500).json({ message: '오류: ' + err.message });
+        });
 });
 
-// 간단한 review ID 생성 함수 (임의의 문자열로 대체할 수 있음)
-function generateReviewId() {
-  return 'reviewId_' + Math.random().toString(36).substr(2, 9);
-}
-
-module.exports = router;
+app.listen(port, () => {
+    console.log(`서버가 http://localhost:${port}에서 실행 중입니다.`);
+});

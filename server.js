@@ -41,14 +41,11 @@ app.get('/about', (req, res) => {
  
 //문화 찾기
 app.use('/search', require('./routers/search.js'))
-app.get('/search', (req, resp) => {
-  resp.sendFile(path.join(__dirname, 'public', './search.html'));
-});
 
 //문화 소식
 app.use('/news', require('./routers/news.js'))
 app.get('/news', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'news.html'));
+  res.sendFile(path.join(__dirname, 'public', 'services.html'));
 });
 
 //개발자들
@@ -61,9 +58,8 @@ app.use('/api', require('./routers/news'));
 
 
 
-
 //수정 전 코드 - 용도를 모르겠어서 삭제 안하고 주석처리 해둘게요
-//
+// api엔드포인트 부분 -> 브라우저 콘솔로 받아오는 데이터 확인하는 메세지 담은 부분임
 // announcement 관련 model, router 풀면 에러남 
 
 // app.get('/api/search', (req, res) => {
