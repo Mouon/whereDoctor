@@ -54,16 +54,17 @@
   <!-- Script for fetching and displaying announcements -->
   <script>
     async function fetchAnnouncements() {
-      try {
-        const response = await fetch('/api/announcements');
-        const data = await response.json();
-        console.log('Response:', data);
-        return data.announcements;
-      } catch (error) {
-        console.error('에러:', error);
-        return [];
-      }
+    const apiEndpoint = 'https://gn9x99ghvf.execute-api.ap-northeast-2.amazonaws.com/notice/notice';
+    try {
+      const response = await fetch(apiEndpoint);
+      const data = await response.json();
+      console.log('Response:', data);
+      return data; // API Gateway에서 바로 announcements 배열을 반환한다고 가정
+    } catch (error) {
+      console.error('에러:', error);
+      return [];
     }
+  }
   
     async function displayAnnouncements() {
       const announcements = await fetchAnnouncements();
