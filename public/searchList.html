@@ -31,16 +31,26 @@
   <div class="container">
       <div class="filter">
           <div class="column">
-            <div class = "category">
+
+            
+
+    
+  <script>
+
+      document.querySelector('.search-send').addEventListener('click', function()
+      {
+        let selectedCity = document.querySelector('.search').value  
+        location.href = '/search/result?val=' + selectedCity
+      })
+    
+    
+  </script>
+
+
+          <div class = "category">
               <h2>지역 선택</h2>
               <div class="checkbox-grid">
-                <label><input type="checkbox" name="gyeonggi" value="가평"> 가평 </label>
-                <label><input type="checkbox" name="gyeonggi" value="고양"> 고양</label>
-                <label><input type="checkbox" name="gyeonggi" value="과천"> 과천</label>
-                <label><input type="checkbox" name="gyeonggi" value="광명"> 광명</label>
-                <label><input type="checkbox" name="gyeonggi" value="광주"> 광주</label>
-                <label><input type="checkbox" name="gyeonggi" value="구리"> 구리</label>
-                <label><input type="checkbox" name="gyeonggi" value="군포"> 군포</label>
+           
                 <label><input type="checkbox" name="gyeonggi" value="김포"> 김포</label>
                 <label><input type="checkbox" name="gyeonggi" value="남양주"> 남양주</label>
                 <label><input type="checkbox" name="gyeonggi" value="동두천"> 동두천</label>
@@ -78,14 +88,24 @@
             </div>
           </div>
         </div>
-        <div class="col-md-9">
+        <button class="search-send">검색</button>
+        <div class="container">
+          <!-- 이 부분은 수정되었습니다. -->
           <div class="search-results">
               <!-- 검색 결과는 이곳에 동적으로 추가됩니다. -->
           </div>
-        </div>
+      </div>
+      
       </div>
   </div>
   
+
+
+    
+
+
+
+
     <footer class="text-white text-center py-3">
         <p>&copy; 2023 모두의 문화생활. All rights reserved.</p>
     </footer>
@@ -104,56 +124,73 @@
           { title: "행사 6", description: "행사 6의 설명" }
       ];
 
-    function displaySearchResults() {
+    // 웹 페이지 내에서 Lambda 함수를 호출하는 함수 
+ // API 호출 함수
+function searchWithKeyword() {
+    const searchKeyword = document.getElementById("searchKeyword").value;
+    const apiUrl = `https://bwq9t465bi.execute-api.ap-northeast-2.amazonaws.com/searchresult?keyword=${encodeURIComponent(searchKeyword)}`;
+    
+    fetch(apiUrl, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+    .then((response) => {
+        console.log(response);  // 응답 검사
+        return response.json();
+    })
+    .then((data) => {
+        if (Object.keys(data).length === 0) {
+            // 데이터가 비어있을 경우의 처리
+            console.error("데이터가 비어 있습니다.");
+            displaySearchResults(searchResults); // 더미 데이터로 대체
+        } else {
+            displaySearchResults(data);
+        }
+    })
+    .catch((error) => {
+        console.error("API 호출 중 오류 발생:", error);
+        displaySearchResults(searchResults); // 더미 데이터로 대체
+    });
+}
+
+
+
+
+  function displaySearchResults(data) {
     const searchResultsContainer = document.querySelector(".search-results");
 
     searchResultsContainer.innerHTML = "";
 
-    searchResults.forEach((result,index) => {
+    data.forEach(result => {
+        const title = result.title.toLowerCase();
         const resultCard = document.createElement("div");
         resultCard.classList.add("card");
 
         const resultCardBody = document.createElement("div");
         resultCardBody.classList.add("card-body");
 
-        const titleLink = document.createElement("a"); // 링크를 생성
-        titleLink.href = result.link; 
-
         const titleElement = document.createElement("h5");
         titleElement.classList.add("card-title");
         titleElement.textContent = result.title;
-
-        titleLink.appendChild(titleElement); 
 
         const descriptionElement = document.createElement("p");
         descriptionElement.classList.add("card-text");
         descriptionElement.textContent = result.description;
 
-        const reviewButton = document.createElement("button");
-        reviewButton.classList.add("btn", "btn-secondary");
-        reviewButton.textContent = "후기 작성";
-        reviewButton.style.fontFamily = "'TextFont', sans-serif"; 
-        // 버튼 클릭 이벤트: 후기 작성 페이지로 이동
-        reviewButton.addEventListener("click", () => {
-            openReviewPage(index);
-        });
-
-        resultCardBody.appendChild(titleLink);
+        resultCardBody.appendChild(titleElement);
         resultCardBody.appendChild(descriptionElement);
-        resultCardBody.appendChild(reviewButton); 
         resultCard.appendChild(resultCardBody);
 
         searchResultsContainer.appendChild(resultCard);
     });
-
-    function openReviewPage(index) {
-        const reviewUrl = `review.html?id=${index}`;
-        window.location.href = reviewUrl;
-    }
-
 }
+
+document.querySelector('.btn.btn-primary.ml-2').addEventListener('click', searchWithKeyword);
+
+
       window.onload = displaySearchResults;
   </script>
 </body>
 </html>
-
