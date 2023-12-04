@@ -72,7 +72,6 @@
         return [];
     }
 }
-
     async function searchWithKeyword() {
         const searchKeyword = document.getElementById("searchKeyword").value;
         const apiUrl = `https://18e7fhahqj.execute-api.ap-northeast-2.amazonaws.com/default/searchButton?searchQuery=${encodeURIComponent(searchKeyword)}`;
@@ -88,7 +87,7 @@
             console.error('Search error:', error);
         }}
 
-    // 이벤트 데이터를 화면에 표시하는 함수
+      // 이벤트 데이터를 화면에 표시하는 함수
     async function displayEvents() {
       const events = await fetchEvents();
       const container = document.querySelector('.search-results');
@@ -126,6 +125,7 @@
     }
 
  window.onload = displayEvents;
+
   </script>
 </body>
 </html>

@@ -1,54 +1,181 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail | 모두의 문화생활</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css"> <!-- Link to your style.css -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | 모두의 문화생활</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .poster-container {
+      text-align: center;
+      background-color: white;
+      padding: 20px;
+    }
+
+    .poster-container img {
+      max-width: 100%;
+      max-height: 100%;
+      margin: auto;
+      display: block;
+    }
+
+    .review-box {
+    background-color: rgb(236, 247, 251);
+    border: 1px solid black;
+    padding: 25px;
+    margin-bottom: 15px;
+    min-height: 3em;
+    border-radius: 10px;
+  }
+  </style>
 </head>
+
 <body>
-    <!-- Navbar -->
-    <iframe src="navbar.html" onload="this.before((this.contentDocument.body || this.contentDocument).children[0]); this.remove()"></iframe>
+  <iframe src="../navbar.html" onload="this.before((this.contentDocument.body || this.contentDocument).children[0]); this.remove()"></iframe>
+  <header class="text-black text-center header-container" style="background-color: white; color: black;">
+    <div class="background-image"></div>
+    <div class="container">
+      <h1 class="display-4" id="title"></h1> 
 
-    <!-- Header -->
-    <header class="text-white text-center banner search-banner">
-        <div class="container">
-            <h1 class="display-4">상세페이지</h1>
-            <span class="subtext">원하는 정보의 상세 정보를 확인하세요!</span>
-        </div>
-    </header>
+    <p class="lead">찾으신 컨텐츠의 상세정보를 확인해 보세요.</p>
+      
+    </divii>
+  </header>
 
+  <div class="poster-container">
+    <img src="http://www.eduinside.kr/news/photo/202311/13099_9298_823.jpg" alt="행사 포스터">
+  </div>
+
+    <!-- 행사 추가 정보 -->
+    <section class="about-content text-center">
+        <p>행사 유형 : <span id="type"></span></p>
+        <p>행사 기관 : <span id="INST"></span></p>
+        <p>행사 기간 : </p>
+        <p>진행 시간 : <span id="time"></span></p>
+        <p>참여비 : <span id="price"></span></p>
+        <p>홈페이지 링크: </p>
+    </section>
+   <div class="container my-5">
+  
+
+    <!-- 프로그램 데이터 - 서버로부터 전달받은 programData(JSON) 적용하는 스크립트 코드 -->
     <script>
-        async function fetchAnnouncements() {
-        try {
-            const response = await fetch('/api/announcements');
-            const data = await response.json();
-            console.log('Response:', data);
-            return data.announcements;
-        } catch (error) {
-            console.error('에러:', error);
-            return [];
-        }
-        }
-    
-        async function displayAnnouncements() {
-        const announcements = await fetchAnnouncements();
-        const announcementRow = document.getElementById('announcementRow');
+      fetch('/search/api/getProgramData')
+          .then(response => response.json())  // 서버 응답을 JSON으로 파싱
+          .then(programData => {
+              var title = document.getElementById('title');
+              var type = document.getElementById('type');
+              var INST = document.getElementById('INST');
+              var time = document.getElementById('time');
+              var price = document.getElementById('price');
+              
+              if (programData.length > 0) {
+                  title.innerText = programData[0].title;
+                  type.innerText = programData[0].type;
+                  INST.innerText = programData[0].INST;
+                  time.innerText = programData[0].time;
+                  price.innerText = programData[0].price;
+              } else {
+                  title.innerText = '데이터 없음';
+                  type.innerText = '데이터 없음';
+                  INST.innerText = '데이터 없음';
+                  duration.innerText = '데이터 없음';
+                  time.innerText = '데이터 없음';
+                  price.innerText = '데이터 없음';
+              }
 
-        announcements.forEach((announcement, index) => {
-            cardContent.innerHTML = `
-                <strong>유형:</strong> ${announcement.CLASS_NM}<br>
-                <strong>기간:</strong> ${announcement.BGNG_DE} ~ ${announcement.END_DE}<br>
-                <strong>운영시간:</strong> ${announcement.TM}`;
-                //요약내용은 더미데이터에 없어서 일단 비워둘게요 여기 추가하면 됩니다.
-        });
-        }
-        
-        displayAnnouncements();
+              const programTitle = programData[0].title;
+
+              // 두 번째 fetch 요청: 리뷰 데이터 가져오기 (쿼리 파라미터로 프로그램의 title 전달)
+              return fetch(`/search/api/getReviewData?title=${encodeURIComponent(programTitle)}`);
+          })
+          .then(response => response.json())
+          .then(reviewData => {
+              var reviewList = document.getElementById('reviewList');
+              reviewList.innerHTML = ''; // 기존 리스트 초기화
+
+              reviewData.forEach(function (review) {
+              var reviewBox = document.createElement('div');
+              reviewBox.className = 'review-box';
+              var reviewText = document.createElement('p');
+              reviewText.innerText = review.reviewText;
+              reviewBox.appendChild(reviewText);
+              reviewList.appendChild(reviewBox);
+              });
+
+              if (reviewData.length === 0) {
+                reviewList.innerHTML = '<p>리뷰가 없습니다.</p>';
+              }
+              
+              var reviewButton = document.getElementById('reviewButton');
+              reviewButton.addEventListener('click', function () {
+                window.location.href = '/review.html?title=' + reviewData[0].title;
+              });
+           })
+          .catch(error => console.error('Error fetching data:', error));
+
+          // 페이지 로드 시 메시지 수신 이벤트 등록
+          window.addEventListener('message', function(event) {
+            if (event.data === 'reviewSaved') {
+                // 저장이 완료된 후에 페이지를 새로고침
+                location.reload();
+            }
+          });
     </script>
-    <footer class="text-white text-center py-3">
-        <p>&copy; 2023 모두의 문화생활. All rights reserved.</p>
-    </footer>
-    </body>
+
+<!-- 행사 후기 섹션 -->
+<section class="about-content text-center" style="margin-bottom: 40px;">
+  <h2>행사 후기 </h2>
+  <span class="subtext">행사에 참여한 다른 사용자들의 후기를 참고해보세요.</span><br><br>
+
+<!-- 후기 리스트를 표시할 곳 -->
+<div id="reviewList" class="review-list">
+</div>
+
+<!-- 후기 작성 버튼 -->
+<button id="reviewButton" style="background-color: #e0e0e0; padding: 10px;">
+  리뷰 작성
+</button>
+
+</section>
+
+  </div>
+
+
+    
+  <footer class="text-white text-center py-3">
+    <p>&copy; 2023 모두의 문화생활. All rights reserved.</p>
+  </footer>
+
+  <!-- Bootstrap JS (optional, for some components) -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const parallaxText = document.querySelector('.parallax-text');
+    const aboutContent = document.querySelector('.about-content');
+
+    function updateParallaxTextPosition() {
+      const viewportHeight = window.innerHeight;
+      const parallaxTextHeight = parallaxText.clientHeight;
+      const aboutContentHeight = aboutContent.clientHeight;
+      const marginTop = (viewportHeight - parallaxTextHeight) / 2;
+      const aboutContentBottom = aboutContent.getBoundingClientRect().bottom;
+
+      if (aboutContentBottom > viewportHeight / 2) {
+        parallaxText.style.marginTop = `${marginTop}px`;
+      } else {
+        // Make the text appear in the middle as user scrolls down
+        const distanceFromMiddle = viewportHeight / 2 - aboutContentBottom;
+        parallaxText.style.marginTop = `${marginTop + distanceFromMiddle}px`;
+      }
+    }
+
+    window.addEventListener('scroll', updateParallaxTextPosition);
+    window.addEventListener('resize', updateParallaxTextPosition);
+    updateParallaxTextPosition();
+  </script>
+</body>
 </html>
