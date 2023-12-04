@@ -14,7 +14,7 @@
       .card-title:hover {
         color: orange; /* 마우스를 올렸을 때 노란색으로 변경 */
       }
-  </style>
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -58,8 +58,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-      // Lambda 함수에서 데이터를 가져오는 함수
-      async function fetchEvents() {
+       // Lambda 함수에서 데이터를 가져오는 함수
+       async function fetchEvents() {
     try {
         const response = await fetch('https://bwq9t465bi.execute-api.ap-northeast-2.amazonaws.com/searchresult/'); 
         if (!response.ok) {
@@ -100,10 +100,6 @@
 
           const cardBody = document.createElement('div');
           cardBody.className = 'card-body';
-
-          // const title = document.createElement('h5');
-          // title.className = 'card-title';
-          // title.textContent = event.TITLE_NM;
 
           const titleLink = document.createElement('a');
           titleLink.href = event.ORIGIN_CONT; // ORIGIN_CONT로 링크 설정
