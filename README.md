@@ -1,3 +1,29 @@
+# 아키텍처
+<img width="610" alt="스크린샷 2024-09-05 오전 10 57 47" src="https://github.com/user-attachments/assets/0412fa95-06c9-47ea-aaa1-a3e006102bfe">  
+
+# 람다 상세 아키텍처  
+
+
+
+
+        
+
+#### search-list
+<img width="610" alt="스크린샷 2024-09-05 오전 10 58 04" src="https://github.com/user-attachments/assets/2c0bc73e-8c31-44db-abaf-638968044237">  
+
+#### searchresult-lambda
+<img width="610" alt="스크린샷 2024-09-05 오전 10 58 13" src="https://github.com/user-attachments/assets/e3b1a6d8-b359-47ce-a05f-13fe81b16a49">  
+
+#### search-buttom
+<img width="610" alt="스크린샷 2024-09-05 오전 10 58 31" src="https://github.com/user-attachments/assets/3f019d9f-f836-46eb-b4f3-a2e6651e2e31">  
+
+#### notice-lambda
+<img width="610" alt="스크린샷 2024-09-05 오전 10 58 40" src="https://github.com/user-attachments/assets/2f56bd1f-0665-4ae7-ab98-7db03cd1686f">
+
+
+
+
+
 # 모두의 문화생활 웹 어플리케이션
 
 "모두의 문화생활"은 경기도 내 문화 프로그램 정보를 쉽게 검색하고 접할 수 있도록 도와주는 어플리케이션입니다. 이 어플리케이션을 사용하면 사용자들은 위치, 관심 분야, 날짜 등을 기반으로 경기도 내의 다양한 문화 프로그램 정보를 손쉽게 찾을 수 있습니다.
